@@ -92,8 +92,10 @@ Thumbs.db
 *.swo
 
 # Ignore application property/yaml files containing secrets
-src/main/resources/*.properties
-src/main/resources/*.yml
+*/src/main/resources/*.properties
+*/src/main/resources/*.yml
+*.properties
+*.yml
 
 # Environment files
 .env
