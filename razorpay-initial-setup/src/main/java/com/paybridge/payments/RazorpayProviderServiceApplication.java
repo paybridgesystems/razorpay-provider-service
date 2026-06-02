@@ -1,0 +1,11 @@
+package com.paybridge.payments;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RazorpayProviderServiceApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(RazorpayProviderServiceApplication.class, args);
+	}
+}
