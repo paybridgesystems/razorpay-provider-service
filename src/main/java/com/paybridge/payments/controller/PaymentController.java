@@ -16,17 +16,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/v1/internal/payments")
 public class PaymentController {
-    private final PaymentService paymentService;
-    
-    @PostMapping("/capture")
-    public void capturePayment() {
+	private final PaymentService paymentService;
+
+	@PostMapping("/capture")
+	public void capturePayment() {
 		log.info("capturePayment called");
 		paymentService.capturePayment();
 	}
 
-    @GetMapping
-    public ResponseEntity<String> health() {
-        log.info("Health check for ProviderController");
-        return ResponseEntity.ok(paymentService.capturePayment());
-    }
+	@GetMapping
+	public ResponseEntity<String> health() {
+		log.info("Health check for ProviderController");
+		return ResponseEntity.ok(paymentService.capturePayment());
+	}
 }
