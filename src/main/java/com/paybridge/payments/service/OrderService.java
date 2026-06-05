@@ -34,7 +34,7 @@ public class OrderService {
 	        RazorpayOrderResponse response = razorpayClient.createOrder(razorpayRequest);
 	        
 	        return OrderResponse.builder()
-	        		.amount(response.getAmount())
+	        		.amount(response.getAmount() / Constant.CONVERT_TO_PAISE)
 	        		.currency(response.getCurrency())
 	        		.orderId(response.getId())
 	        		.receipt(response.getReceipt())
