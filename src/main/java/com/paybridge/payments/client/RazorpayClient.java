@@ -9,7 +9,7 @@ import com.paybridge.payments.client.model.RazorpayOrderRequest;
 import com.paybridge.payments.client.model.RazorpayOrderResponse;
 
 @FeignClient(
-	name = "razorpay-client", 
+	name = "${razorpay.client.name:razorpay-client}", 
 	url = "${razorpay.base-url}", 
 	configuration = RazorpayFeignConfig.class
 )
