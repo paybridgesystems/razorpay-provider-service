@@ -1,13 +1,10 @@
 package com.paybridge.payments.client.config;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import feign.RequestInterceptor;
+import feign.auth.BasicAuthRequestInterceptor;
 
 @Configuration
 public class RazorpayFeignConfig {
@@ -19,21 +16,12 @@ public class RazorpayFeignConfig {
     private String keySecret;
 
     @Bean
-    RequestInterceptor authInterceptor() {
-
-        return template -> {
-            String credentials = keyId + ":" + keySecret;
-            String encoded = Base64.getEncoder()
-                    .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
-            template.header(
-                    "Authorization",
-                    "Basic " + encoded);
-            System.out.println("Authorization Header Added");
-        };
+    BasicAuthRequestInterceptor razorpayAuthInterceptor() {
+        return new BasicAuthRequestInterceptor(keyId, keySecret);
     }
 
     @Bean
     feign.Logger.Level feignLoggerLevel() {
-        return feign.Logger.Level.FULL;
+        return feign.Logger.Level.BASIC;
     }
 }
