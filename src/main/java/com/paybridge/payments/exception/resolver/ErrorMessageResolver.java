@@ -15,7 +15,6 @@ public class ErrorMessageResolver {
     }
 
     public String resolve(ErrorCode errorCode) {
-        return messageSource.getMessage(
-            String.valueOf(errorCode.getCode()), null, null);
+        return messageSource.getMessage(String.valueOf(errorCode.getCode()), null, null);
     }
 }

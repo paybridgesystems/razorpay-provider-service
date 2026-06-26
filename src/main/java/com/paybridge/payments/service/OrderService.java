@@ -34,22 +34,17 @@ public class OrderService {
 				.paymentCapture(RazorpayConstants.PAYMENT_CAPTURE_DISABLED)    
 				.build();
 
-		try {
-			log.info("Calling RazorpayClient with request: {}", razorpayRequest);
-			RazorpayOrderResponse response = razorpayClient.createOrder(razorpayRequest);
+		log.info("Calling RazorpayClient with request: {}", razorpayRequest);
+		RazorpayOrderResponse response = razorpayClient.createOrder(razorpayRequest);
 
-			log.info("Order created successfully with Razorpay, response: {}", response);
-			return ResponseEntity.ok(OrderResponse.builder()
-					.amount(response.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
-					.currency(response.getCurrency())
-					.orderId(response.getId())
-					.receipt(response.getReceipt())
-					.rpStatus(response.getStatus())
-					.build());
+		log.info("Order created successfully with Razorpay, response: {}", response);
+		return ResponseEntity.ok(OrderResponse.builder()
+				.amount(response.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
+				.currency(response.getCurrency())
+				.orderId(response.getId())
+				.receipt(response.getReceipt())
+				.rpStatus(response.getStatus())
+				.build());
 
-		} catch (Exception x) {
-			log.error("Unexpected error while calling Razorpay", x);
-			throw new RuntimeException("Failed to create order with Razorpay", x);
-		}
 	}
 }

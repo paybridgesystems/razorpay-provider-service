@@ -6,6 +6,8 @@ public class RazorpayConstants {
 	
 	public static final String RAZORPAY_CLIENT = "razorpay-client";
 	
+	public static final String TRACE_ID = "traceId";
+	
 	public static final int RUPEE_CONVERSION_FACTOR = 100;
 	
 	public static final String DEFAULT_CURRENCY = "INR";

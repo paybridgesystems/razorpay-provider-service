@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.paybridge.payments.exception.resolver.ErrorMessageResolver;
+import com.paybridge.payments.constant.RazorpayConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.builder()
             .errorCode(errorCode.getCode())
             .message(messageResolver.resolve(errorCode))
-            .traceId(MDC.get("traceId"))
+            .traceId(MDC.get(RazorpayConstants.TRACE_ID))
             .timestamp(Instant.now())
             .path(request.getRequestURI())
             .retryable(errorCode.isRetryable())
@@ -63,9 +64,9 @@ public class GlobalExceptionHandler {
             .toList();
 
         ErrorResponse response = ErrorResponse.builder()
-            .errorCode(ErrorCode.INVALID_REQUEST.getCode())
-            .message(messageResolver.resolve(ErrorCode.INVALID_REQUEST))
-            .traceId(MDC.get("traceId"))
+            .errorCode(ErrorCode.GENERAL_ERROR.getCode())
+            .message(messageResolver.resolve(ErrorCode.GENERAL_ERROR))
+            .traceId(MDC.get(RazorpayConstants.TRACE_ID))
             .timestamp(Instant.now())
             .path(request.getRequestURI())
             .retryable(false)
@@ -73,7 +74,7 @@ public class GlobalExceptionHandler {
             .build();
 
         return ResponseEntity
-            .status(ErrorCode.INVALID_REQUEST.getHttpStatus())
+            .status(ErrorCode.GENERAL_ERROR.getHttpStatus())
             .body(response);
     }
 
@@ -85,16 +86,16 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
 
         ErrorResponse response = ErrorResponse.builder()
-            .errorCode(ErrorCode.INTERNAL_ERROR.getCode())
-            .message(messageResolver.resolve(ErrorCode.INTERNAL_ERROR))
-            .traceId(MDC.get("traceId"))
+            .errorCode(ErrorCode.GENERAL_ERROR.getCode())
+            .message(messageResolver.resolve(ErrorCode.GENERAL_ERROR))
+            .traceId(MDC.get(RazorpayConstants.TRACE_ID))
             .timestamp(Instant.now())
             .path(request.getRequestURI())
             .retryable(false)
             .build();
 
         return ResponseEntity
-            .status(ErrorCode.INTERNAL_ERROR.getHttpStatus())
+            .status(ErrorCode.GENERAL_ERROR.getHttpStatus())
             .body(response);
     }
 }
