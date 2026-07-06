@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.paybridge.payments.constant.Constant;
+import com.paybridge.payments.constant.RazorpayConstants;
 import com.paybridge.payments.dto.OrderRequest;
 import com.paybridge.payments.dto.OrderResponse;
 import com.paybridge.payments.service.OrderService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,27 +24,22 @@ public class OrderController {
 	private final OrderService orderService;
 
 	@PostMapping
-	public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+	public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
 		log.info("createOrder called in OrderController with orderRequest: {}", orderRequest);
-		try {
-			log.info("Calling OrderService to create order");
-			return orderService.createOrder(orderRequest);
-		} catch (Exception e) {
-			log.error("Error creating order: {}", e.getMessage(), e);
-			throw new RuntimeException("Failed to create order", e);
-		}
+		log.info("Calling OrderService to create order");
+		return orderService.createOrder(orderRequest);
 	}
 
 	@GetMapping("/health")
 	public ResponseEntity<OrderResponse> health() throws Exception {
 		log.info("Health check for OrderController");
-		try {
-			ResponseEntity<OrderResponse> response = orderService.createOrder(OrderRequest.builder().amount(100).currency(Constant.DEFAULT_CURRENCY).build());
-			log.info("Health check successful, response: {}", response);
-		} catch (Exception e) {
-			log.error("Health check failed: {}", e.getMessage(), e);
-			return ResponseEntity.status(503).build();
-		}
+
+		ResponseEntity<OrderResponse> response = orderService.createOrder(OrderRequest.builder()
+				.amount(100)
+				.currency(RazorpayConstants.DEFAULT_CURRENCY)
+				.build());
+		log.info("Health check successful, response: {}", response);
+
 		return orderService.createOrder(OrderRequest.builder().build());
 	}
 }

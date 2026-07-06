@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paybridge.payments.client.decoder.RazorpayErrorDecoder;
+
 import feign.auth.BasicAuthRequestInterceptor;
 
 @Configuration
@@ -18,6 +21,11 @@ public class RazorpayFeignConfig {
     @Bean
     BasicAuthRequestInterceptor razorpayAuthInterceptor() {
         return new BasicAuthRequestInterceptor(keyId, keySecret);
+    }
+    
+    @Bean
+    RazorpayErrorDecoder razorpayErrorDecoder(ObjectMapper objectMapper) {
+        return new RazorpayErrorDecoder(objectMapper);
     }
 
     @Bean

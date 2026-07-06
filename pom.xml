@@ -111,6 +111,30 @@
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5</artifactId>
 		</dependency>
+		
+		<!-- Spring Boot Starter Validation for bean validation support -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		
+		<!-- Resilience4j Spring Boot 3 for implementing resilience patterns -->
+		<dependency>
+		    <groupId>io.github.resilience4j</groupId>
+		    <artifactId>resilience4j-spring-boot3</artifactId>
+		</dependency>
+		
+		<!-- Spring Boot Starter AOP for aspect-oriented programming support -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		
+		<!-- Spring Boot Starter Actuator for monitoring and management endpoints -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
