@@ -64,8 +64,8 @@ public class GlobalExceptionHandler {
             .toList();
 
         ErrorResponse response = ErrorResponse.builder()
-            .errorCode(ErrorCode.GENERAL_ERROR.getCode())
-            .message(messageResolver.resolve(ErrorCode.GENERAL_ERROR))
+            .errorCode(ErrorCode.UNEXPECTED_ERROR.getCode())
+            .message(messageResolver.resolve(ErrorCode.UNEXPECTED_ERROR))
             .traceId(MDC.get(RazorpayConstants.TRACE_ID))
             .timestamp(Instant.now())
             .path(request.getRequestURI())
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
             .build();
 
         return ResponseEntity
-            .status(ErrorCode.GENERAL_ERROR.getHttpStatus())
+            .status(ErrorCode.UNEXPECTED_ERROR.getHttpStatus())
             .body(response);
     }
 
@@ -86,8 +86,8 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
 
         ErrorResponse response = ErrorResponse.builder()
-            .errorCode(ErrorCode.GENERAL_ERROR.getCode())
-            .message(messageResolver.resolve(ErrorCode.GENERAL_ERROR))
+            .errorCode(ErrorCode.UNEXPECTED_ERROR.getCode())
+            .message(messageResolver.resolve(ErrorCode.UNEXPECTED_ERROR))
             .traceId(MDC.get(RazorpayConstants.TRACE_ID))
             .timestamp(Instant.now())
             .path(request.getRequestURI())
@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
             .build();
 
         return ResponseEntity
-            .status(ErrorCode.GENERAL_ERROR.getHttpStatus())
+            .status(ErrorCode.UNEXPECTED_ERROR.getHttpStatus())
             .body(response);
     }
 }

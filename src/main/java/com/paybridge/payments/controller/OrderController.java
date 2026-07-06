@@ -12,6 +12,7 @@ import com.paybridge.payments.dto.OrderRequest;
 import com.paybridge.payments.dto.OrderResponse;
 import com.paybridge.payments.service.OrderService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,7 @@ public class OrderController {
 	private final OrderService orderService;
 
 	@PostMapping
-	public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+	public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
 		log.info("createOrder called in OrderController with orderRequest: {}", orderRequest);
 		log.info("Calling OrderService to create order");
 		return orderService.createOrder(orderRequest);
