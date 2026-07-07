@@ -1,13 +1,17 @@
 package com.paybridge.payments.client;
 
 import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.paybridge.payments.client.config.RazorpayFeignConfig;
+import com.paybridge.payments.client.model.RazorpayCaptureRequest;
+import com.paybridge.payments.client.model.RazorpayCaptureResponse;
 import com.paybridge.payments.client.model.RazorpayOrderRequest;
 import com.paybridge.payments.client.model.RazorpayOrderResponse;
 import com.paybridge.payments.exception.ErrorCode;
@@ -25,6 +29,14 @@ public interface RazorpayClient {
 	@Retry(name = "razorpay", fallbackMethod = "createOrderFallback")
 	@CircuitBreaker(name = "razorpay")
 	RazorpayOrderResponse createOrder(@RequestBody RazorpayOrderRequest request);
+	
+	@PostMapping("/v1/payments/{paymentId}/capture")
+    @Retry(name = "razorpay", fallbackMethod = "capturePaymentFallback")
+    @CircuitBreaker(name = "razorpay", fallbackMethod = "capturePaymentFallback")
+    RazorpayCaptureResponse capturePayment(
+        @PathVariable("paymentId") String paymentId,
+        @RequestBody RazorpayCaptureRequest request
+    );
 
 	default RazorpayOrderResponse createOrderFallback(RazorpayOrderRequest request, Throwable ex) {
 
@@ -46,4 +58,17 @@ public interface RazorpayClient {
 	            Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage())
 	        );
 	}
+	
+	default RazorpayCaptureResponse capturePaymentFallback(
+            String paymentId, RazorpayCaptureRequest request, Throwable ex) {
+        if (ex instanceof RazorpayProviderException rpe) throw rpe;
+        if (ex instanceof CallNotPermittedException)
+            throw new RazorpayProviderException(ErrorCode.CIRCUIT_BREAKER_OPEN);
+        if (ex instanceof ConnectException || ex instanceof UnknownHostException)
+            throw new RazorpayProviderException(ErrorCode.RAZORPAY_UNREACHABLE);
+        if (ex instanceof RetryableException)
+            throw new RazorpayProviderException(ErrorCode.RAZORPAY_TIMEOUT);
+        throw new RazorpayProviderException(ErrorCode.UNEXPECTED_ERROR,
+            Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage()));
+    }
 }

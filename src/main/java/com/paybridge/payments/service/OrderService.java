@@ -1,6 +1,5 @@
 package com.paybridge.payments.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.paybridge.payments.client.RazorpayClient;
@@ -19,32 +18,29 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrderService {
 
-	private final RazorpayClient razorpayClient;
+    private final RazorpayClient razorpayClient;
+    private final UniqueIdGenerator uniqueIdGenerator;
 
-	private final UniqueIdGenerator uniqueIdGenerator;
+    public OrderResponse createOrder(OrderRequest orderRequest) {
+        log.info("createOrder called with orderRequest: {}", orderRequest);
 
-	public ResponseEntity<OrderResponse> createOrder(OrderRequest orderRequest) throws RuntimeException {
-		log.info("createOrder called in OrderService with orderRequest: {}", orderRequest);
+        RazorpayOrderRequest razorpayRequest = RazorpayOrderRequest.builder()
+            .amount(orderRequest.getAmount() * RazorpayConstants.RUPEE_CONVERSION_FACTOR)
+            .currency(orderRequest.getCurrency())
+            .receipt(RazorpayConstants.RECEIPT_ID_PREFIX + uniqueIdGenerator.generateUniqueId())
+            .paymentCapture(RazorpayConstants.PAYMENT_CAPTURE_DISABLED)
+            .build();
 
-		RazorpayOrderRequest razorpayRequest = 
-				RazorpayOrderRequest.builder()
-				.amount(orderRequest.getAmount() * RazorpayConstants.RUPEE_CONVERSION_FACTOR)		
-				.currency(orderRequest.getCurrency())
-				.receipt(RazorpayConstants.RECEIPT_ID_PREFIX + uniqueIdGenerator.generateUniqueId())
-				.paymentCapture(RazorpayConstants.PAYMENT_CAPTURE_DISABLED)    
-				.build();
+        log.info("Calling RazorpayClient with request: {}", razorpayRequest);
+        RazorpayOrderResponse razorpayResponse = razorpayClient.createOrder(razorpayRequest);
 
-		log.info("Calling RazorpayClient with request: {}", razorpayRequest);
-		RazorpayOrderResponse response = razorpayClient.createOrder(razorpayRequest);
-
-		log.info("Order created successfully with Razorpay, response: {}", response);
-		return ResponseEntity.ok(OrderResponse.builder()
-				.amount(response.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
-				.currency(response.getCurrency())
-				.orderId(response.getId())
-				.receipt(response.getReceipt())
-				.rpStatus(response.getStatus())
-				.build());
-
-	}
+        log.info("Order created successfully, razorpayOrderId: {}", razorpayResponse.getId());
+        return OrderResponse.builder()
+            .amount(razorpayResponse.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
+            .currency(razorpayResponse.getCurrency())
+            .orderId(razorpayResponse.getId())
+            .receipt(razorpayResponse.getReceipt())
+            .rpStatus(razorpayResponse.getStatus())
+            .build();
+    }
 }

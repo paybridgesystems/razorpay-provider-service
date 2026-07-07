@@ -16,4 +16,8 @@ public class RazorpayConstants {
 	
 	public static final int PAYMENT_CAPTURE_DISABLED = 0;
 	
+	public static final String STATUS_AUTHORIZED = "AUTHORIZED";
+	
+	public static final String PAYLOAD_SEPARATOR = "|";
+	
 }
