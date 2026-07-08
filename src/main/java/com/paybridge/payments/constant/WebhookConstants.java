@@ -1,7 +1,7 @@
 package com.paybridge.payments.constant;
 
-public class WebhookConstats {
-	private WebhookConstats() {}
+public class WebhookConstants {
+	private WebhookConstants() {}
 
 	public static final String HMAC_ALGORITHM = "HmacSHA256";
 
