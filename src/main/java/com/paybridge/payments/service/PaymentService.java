@@ -13,6 +13,7 @@ import com.paybridge.payments.dto.PaymentCaptureRequest;
 import com.paybridge.payments.dto.PaymentCaptureResponse;
 import com.paybridge.payments.exception.ErrorCode;
 import com.paybridge.payments.exception.RazorpayProviderException;
+import com.paybridge.payments.repository.RazorpayOrderRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ public class PaymentService {
 	private final RazorpayClient razorpayClient;
     
     private final HmacSignatureVerifier signatureVerifier;
+    
+    private final RazorpayOrderRepository orderRepository;
 
     @Value("${razorpay.key.secret}")
     private String keySecret;
@@ -74,16 +77,30 @@ public class PaymentService {
             .build();
 
         RazorpayCaptureResponse razorpayResponse = razorpayClient.capturePayment(
+            request.getRazorpayPaymentId(), captureRequest);
+
+        int rowsUpdated = orderRepository.updateToAuthorized(
+            request.getRazorpayOrderId(),
             request.getRazorpayPaymentId(),
-            captureRequest
+            request.getRazorpaySignature()
         );
 
-        log.info("Payment captured successfully, paymentId: {}", razorpayResponse.getId());
+        if (rowsUpdated == 0) {
+            log.warn("Concurrent transition conflict for orderId: {}",
+                request.getRazorpayOrderId());
+            throw new RazorpayProviderException(
+                ErrorCode.CONCURRENT_TRANSITION_CONFLICT,
+                Map.of("razorpayOrderId", request.getRazorpayOrderId())
+            );
+        }
 
+
+        log.info("Payment captured and order updated to AUTHORIZED: {}",
+        		razorpayResponse.getId());
         return PaymentCaptureResponse.builder()
             .razorpayPaymentId(razorpayResponse.getId())
             .razorpayOrderId(razorpayResponse.getOrderId())
-            .status(RazorpayConstants.STATUS_AUTHORIZED)
+            .status("AUTHORIZED")
             .amount(razorpayResponse.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
             .currency(razorpayResponse.getCurrency())
             .build();
