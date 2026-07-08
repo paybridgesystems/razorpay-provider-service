@@ -20,15 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/v1/internal/payments")
 public class PaymentController {
 
-    private final PaymentService paymentService;
+	private final PaymentService paymentService;
 
-    @PostMapping("/verify-and-capture")
-    public ResponseEntity<PaymentCaptureResponse> verifyAndCapture(@RequestBody @Valid PaymentCaptureRequest request) {
-    	log.info("verifyAndCapture called with request: {}", request);
+	@PostMapping("/verify-and-capture")
+	public ResponseEntity<PaymentCaptureResponse> verifyAndCapture(@RequestBody @Valid PaymentCaptureRequest request) {
+		log.info("verifyAndCapture called with request: {}", request);
 
-        PaymentCaptureResponse response = paymentService.verifyAndCapture(request);
-        
-        log.info("Payment verified and captured successfully for orderId: {}", request.getRazorpayOrderId());
-        return ResponseEntity.ok(response);
-    }
+		PaymentCaptureResponse response = paymentService.verifyAndCapture(request);
+
+		log.info("Payment verified and captured successfully for orderId: {}", request.getRazorpayOrderId());
+		return ResponseEntity.ok(response);
+	}
 }

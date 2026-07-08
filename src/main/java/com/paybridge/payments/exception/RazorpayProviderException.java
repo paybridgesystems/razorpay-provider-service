@@ -12,7 +12,7 @@ public class RazorpayProviderException extends RuntimeException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;	
-	
+
 	private final ErrorCode errorCode;
 	private final Map<String, Object> details;
 

@@ -10,13 +10,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RazorpayOrderEntity {
-    private Long id;
-    private String internalOrderId;
-    private String razorpayOrderId;
-    private String razorpayPaymentId;
-    private long amountPaise;
-    private String currency;
-    private String receipt;
-    private String razorpayStatus;
-    private String checkoutSignature;
+	
+	private Long id;
+	
+	private String internalOrderId;
+	
+	private String razorpayOrderId;
+	
+	private String razorpayPaymentId;
+	
+	private long amountPaise;
+	
+	private String currency;
+	
+	private String receipt;
+	
+	private String razorpayStatus;
+	
+	private String checkoutSignature;
 }

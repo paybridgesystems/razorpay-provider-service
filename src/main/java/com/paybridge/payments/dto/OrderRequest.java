@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class OrderRequest {
 
 	@NotNull(message = "Amount is required")
-    @Positive(message = "Amount must be greater than zero")
-    private Integer amount;
-    
+	@Positive(message = "Amount must be greater than zero")
+	private Integer amount;
+
 	@NotBlank(message = "Currency is required")
-    private String currency;
-    
-    private Map<String, Object> notes;
+	private String currency;
+
+	private Map<String, Object> notes;
 }

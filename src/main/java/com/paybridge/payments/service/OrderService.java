@@ -20,41 +20,41 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final RazorpayClient razorpayClient;
-    private final UniqueIdGenerator uniqueIdGenerator;
-    private final RazorpayOrderRepository orderRepository;
+	private final RazorpayClient razorpayClient;
+	private final UniqueIdGenerator uniqueIdGenerator;
+	private final RazorpayOrderRepository orderRepository;
 
-    public OrderResponse createOrder(OrderRequest orderRequest) {
-        log.info("createOrder called with orderRequest: {}", orderRequest);
+	public OrderResponse createOrder(OrderRequest orderRequest) {
+		log.info("createOrder called with orderRequest: {}", orderRequest);
 
-        String internalOrderId = uniqueIdGenerator.generateUniqueId();
+		String internalOrderId = uniqueIdGenerator.generateUniqueId();
 
-        RazorpayOrderRequest razorpayRequest = RazorpayOrderRequest.builder()
-            .amount(orderRequest.getAmount() * RazorpayConstants.RUPEE_CONVERSION_FACTOR)
-            .currency(orderRequest.getCurrency())
-            .receipt(RazorpayConstants.RECEIPT_ID_PREFIX + internalOrderId)
-            .paymentCapture(RazorpayConstants.PAYMENT_CAPTURE_DISABLED)
-            .build();
+		RazorpayOrderRequest razorpayRequest = RazorpayOrderRequest.builder()
+				.amount(orderRequest.getAmount() * RazorpayConstants.RUPEE_CONVERSION_FACTOR)
+				.currency(orderRequest.getCurrency())
+				.receipt(RazorpayConstants.RECEIPT_ID_PREFIX + internalOrderId)
+				.paymentCapture(RazorpayConstants.PAYMENT_CAPTURE_DISABLED)
+				.build();
 
-        log.info("Calling RazorpayClient with request: {}", razorpayRequest);
-        RazorpayOrderResponse razorpayResponse = razorpayClient.createOrder(razorpayRequest);
+		log.info("Calling RazorpayClient with request: {}", razorpayRequest);
+		RazorpayOrderResponse razorpayResponse = razorpayClient.createOrder(razorpayRequest);
 
-        log.info("Order created successfully, razorpayOrderId: {}", razorpayResponse.getId());
-        orderRepository.insert(RazorpayOrderEntity.builder()
-            .internalOrderId(internalOrderId)
-            .razorpayOrderId(razorpayResponse.getId())
-            .amountPaise(razorpayResponse.getAmount())
-            .currency(razorpayResponse.getCurrency())
-            .receipt(razorpayResponse.getReceipt())
-            .build());
+		log.info("Order created successfully, razorpayOrderId: {}", razorpayResponse.getId());
+		orderRepository.insert(RazorpayOrderEntity.builder()
+				.internalOrderId(internalOrderId)
+				.razorpayOrderId(razorpayResponse.getId())
+				.amountPaise(razorpayResponse.getAmount())
+				.currency(razorpayResponse.getCurrency())
+				.receipt(razorpayResponse.getReceipt())
+				.build());
 
-        log.info("Order persisted, razorpayOrderId: {}", razorpayResponse.getId());
-        return OrderResponse.builder()
-            .amount(razorpayResponse.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
-            .currency(razorpayResponse.getCurrency())
-            .orderId(razorpayResponse.getId())
-            .receipt(razorpayResponse.getReceipt())
-            .rpStatus(razorpayResponse.getStatus())
-            .build();
-    }
+		log.info("Order persisted, razorpayOrderId: {}", razorpayResponse.getId());
+		return OrderResponse.builder()
+				.amount(razorpayResponse.getAmount() / RazorpayConstants.RUPEE_CONVERSION_FACTOR)
+				.currency(razorpayResponse.getCurrency())
+				.orderId(razorpayResponse.getId())
+				.receipt(razorpayResponse.getReceipt())
+				.rpStatus(razorpayResponse.getStatus())
+				.build();
+	}
 }

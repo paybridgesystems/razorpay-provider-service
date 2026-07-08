@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RazorpayCaptureRequest {
-    private int amount;      
-    private String currency;
+	
+	private int amount;      
+	
+	private String currency;
 }

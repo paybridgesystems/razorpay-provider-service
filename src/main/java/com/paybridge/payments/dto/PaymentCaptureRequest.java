@@ -14,19 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PaymentCaptureRequest {
 
-    @NotBlank(message = "razorpayPaymentId is required")
-    private String razorpayPaymentId;
+	@NotBlank(message = "razorpayPaymentId is required")
+	private String razorpayPaymentId;
 
-    @NotBlank(message = "razorpayOrderId is required")
-    private String razorpayOrderId;
+	@NotBlank(message = "razorpayOrderId is required")
+	private String razorpayOrderId;
 
-    @NotBlank(message = "razorpaySignature is required")
-    private String razorpaySignature;
+	@NotBlank(message = "razorpaySignature is required")
+	private String razorpaySignature;
 
-    @NotNull(message = "amount is required")
-    @Positive(message = "amount must be greater than zero")
-    private Integer amount;
+	@NotNull(message = "amount is required")
+	@Positive(message = "amount must be greater than zero")
+	private Integer amount;
 
-    @NotBlank(message = "currency is required")
-    private String currency;
+	@NotBlank(message = "currency is required")
+	private String currency;
 }

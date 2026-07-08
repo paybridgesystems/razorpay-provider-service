@@ -10,9 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentCaptureResponse {
-    private String razorpayPaymentId;
-    private String razorpayOrderId;
-    private String status;
-    private int amount;
-    private String currency;
+	
+	private String razorpayPaymentId;
+	
+	private String razorpayOrderId;
+	
+	private String status;
+	
+	private int amount;
+	
+	private String currency;
 }

@@ -10,11 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RazorpayPaymentEventEntity {
+	
     private Long id;
+    
     private String razorpayOrderId;
+    
     private String razorpayPaymentId;
+    
     private String eventType;
+    
     private String rawPayload;
+    
     private String razorpayEventId;
+    
     private boolean processed;
 }

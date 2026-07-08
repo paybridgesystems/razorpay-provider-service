@@ -3,7 +3,7 @@ package com.paybridge.payments.exception;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
-	
+
 	UNEXPECTED_ERROR(30000, HttpStatus.INTERNAL_SERVER_ERROR, false), 
 	RAZORPAY_BAD_REQUEST(30001, HttpStatus.BAD_REQUEST, false), 
 	RAZORPAY_UNAUTHORIZED(30002, HttpStatus.UNAUTHORIZED, false), 
@@ -22,16 +22,16 @@ public enum ErrorCode {
 	CONCURRENT_TRANSITION_CONFLICT(3014, HttpStatus.CONFLICT, false);
 
 	private final int code;
-    private final HttpStatus httpStatus;
-    private final boolean retryable;
-	
+	private final HttpStatus httpStatus;
+	private final boolean retryable;
+
 	ErrorCode(int code, HttpStatus httpStatus, boolean retryable) {
-        this.code = code;
-        this.httpStatus = httpStatus;
-        this.retryable = retryable;
-    }
-	
+		this.code = code;
+		this.httpStatus = httpStatus;
+		this.retryable = retryable;
+	}
+
 	public int getCode() { return code; }
-    public HttpStatus getHttpStatus() { return httpStatus; }
-    public boolean isRetryable() { return retryable; }
+	public HttpStatus getHttpStatus() { return httpStatus; }
+	public boolean isRetryable() { return retryable; }
 }

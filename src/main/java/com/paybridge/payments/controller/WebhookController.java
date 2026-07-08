@@ -18,15 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/v1/internal/payments")
 public class WebhookController {
 
-    private final WebhookService webhookService;
+	private final WebhookService webhookService;
 
-    @PostMapping("/webhook")
-    public ResponseEntity<Void> handleWebhook(
-            @RequestBody String rawPayload,
-            @RequestHeader("X-Razorpay-Signature") String razorpaySignature) {
+	@PostMapping("/webhook")
+	public ResponseEntity<Void> handleWebhook(
+			@RequestBody String rawPayload,
+			@RequestHeader("X-Razorpay-Signature") String razorpaySignature) {
 
-        log.info("Webhook POST received");
-        webhookService.handleWebhook(rawPayload, razorpaySignature);
-        return ResponseEntity.ok().build();
-    }
+		log.info("Webhook POST received");
+		webhookService.handleWebhook(rawPayload, razorpaySignature);
+		return ResponseEntity.ok().build();
+	}
 }
