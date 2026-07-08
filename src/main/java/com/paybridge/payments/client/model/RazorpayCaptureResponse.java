@@ -12,9 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RazorpayCaptureResponse {
-    private String id;
-    private String orderId;
-    private int amount;
-    private String currency;
-    private String status;
+	
+	private String id;
+	
+	private String orderId;
+	
+	private int amount;
+	
+	private String currency;
+	
+	private String status;
 }

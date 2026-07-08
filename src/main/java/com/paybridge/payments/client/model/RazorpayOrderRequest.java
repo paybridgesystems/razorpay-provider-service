@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RazorpayOrderRequest {
 
-    private Integer amount;
+	private Integer amount;
 
-    private String currency;
+	private String currency;
 
-    private String receipt;
+	private String receipt;
 
-    @JsonProperty("payment_capture")
-    private Integer paymentCapture;
-    
-    private Map<String, Object> notes;
+	@JsonProperty("payment_capture")
+	private Integer paymentCapture;
+
+	private Map<String, Object> notes;
 }

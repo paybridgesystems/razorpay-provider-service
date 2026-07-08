@@ -24,19 +24,19 @@ import io.github.resilience4j.retry.annotation.Retry;
 
 @FeignClient(name = "${razorpay.client.name:razorpay-client}", url = "${razorpay.base-url}", configuration = RazorpayFeignConfig.class)
 public interface RazorpayClient {
-	
+
 	@PostMapping("/v1/orders")
 	@Retry(name = "razorpay", fallbackMethod = "createOrderFallback")
 	@CircuitBreaker(name = "razorpay")
 	RazorpayOrderResponse createOrder(@RequestBody RazorpayOrderRequest request);
-	
+
 	@PostMapping("/v1/payments/{paymentId}/capture")
-    @Retry(name = "razorpay", fallbackMethod = "capturePaymentFallback")
-    @CircuitBreaker(name = "razorpay", fallbackMethod = "capturePaymentFallback")
-    RazorpayCaptureResponse capturePayment(
-        @PathVariable("paymentId") String paymentId,
-        @RequestBody RazorpayCaptureRequest request
-    );
+	@Retry(name = "razorpay", fallbackMethod = "capturePaymentFallback")
+	@CircuitBreaker(name = "razorpay", fallbackMethod = "capturePaymentFallback")
+	RazorpayCaptureResponse capturePayment(
+			@PathVariable("paymentId") String paymentId,
+			@RequestBody RazorpayCaptureRequest request
+			);
 
 	default RazorpayOrderResponse createOrderFallback(RazorpayOrderRequest request, Throwable ex) {
 
@@ -52,23 +52,23 @@ public interface RazorpayClient {
 		if (ex instanceof RetryableException) {
 			throw new RazorpayProviderException(ErrorCode.RAZORPAY_TIMEOUT);
 		}
-		
+
 		throw new RazorpayProviderException(
-	            ErrorCode.UNEXPECTED_ERROR,
-	            Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage())
-	        );
+				ErrorCode.UNEXPECTED_ERROR,
+				Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage())
+				);
 	}
-	
+
 	default RazorpayCaptureResponse capturePaymentFallback(
-            String paymentId, RazorpayCaptureRequest request, Throwable ex) {
-        if (ex instanceof RazorpayProviderException rpe) throw rpe;
-        if (ex instanceof CallNotPermittedException)
-            throw new RazorpayProviderException(ErrorCode.CIRCUIT_BREAKER_OPEN);
-        if (ex instanceof ConnectException || ex instanceof UnknownHostException)
-            throw new RazorpayProviderException(ErrorCode.RAZORPAY_UNREACHABLE);
-        if (ex instanceof RetryableException)
-            throw new RazorpayProviderException(ErrorCode.RAZORPAY_TIMEOUT);
-        throw new RazorpayProviderException(ErrorCode.UNEXPECTED_ERROR,
-            Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage()));
-    }
+			String paymentId, RazorpayCaptureRequest request, Throwable ex) {
+		if (ex instanceof RazorpayProviderException rpe) throw rpe;
+		if (ex instanceof CallNotPermittedException)
+			throw new RazorpayProviderException(ErrorCode.CIRCUIT_BREAKER_OPEN);
+		if (ex instanceof ConnectException || ex instanceof UnknownHostException)
+			throw new RazorpayProviderException(ErrorCode.RAZORPAY_UNREACHABLE);
+		if (ex instanceof RetryableException)
+			throw new RazorpayProviderException(ErrorCode.RAZORPAY_TIMEOUT);
+		throw new RazorpayProviderException(ErrorCode.UNEXPECTED_ERROR,
+				Map.of("cause", ex.getMessage() == null ? "unknown" : ex.getMessage()));
+	}
 }

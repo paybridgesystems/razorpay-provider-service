@@ -53,6 +53,13 @@ public class RazorpayErrorDecoder implements ErrorDecoder {
 				);
 		log.error("Razorpay error details: {}", details);
 
+		// Some Razorpay error codes should be mapped to a domain-specific error
+		if ("payment_already_captured".equalsIgnoreCase(razorpayErrorCode)
+				|| "payment_capture_failed".equalsIgnoreCase(razorpayErrorCode)
+				|| "payment_already_confirmed".equalsIgnoreCase(razorpayErrorCode)) {
+			return new RazorpayProviderException(ErrorCode.PAYMENT_CAPTURE_FAILED, details);
+		}
+
 		return switch (status) {
 		case BAD_REQUEST          -> new RazorpayProviderException(
 				ErrorCode.RAZORPAY_BAD_REQUEST, details);
